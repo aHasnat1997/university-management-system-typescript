@@ -42,5 +42,6 @@ const UserSchema = new Schema<TUser>({
 });
 
 
+
 // create user model
 export const UserModel = model<TUser>('user', UserSchema);

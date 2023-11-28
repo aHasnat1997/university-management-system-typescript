@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // all routes
-app.use('/api/v1', AllRoutes)
+app.use('/api/v1', AllRoutes);
 
 // home route
 app.get('/', (req: Request, res: Response) => {
