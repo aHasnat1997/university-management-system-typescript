@@ -1,11 +1,14 @@
 import { Schema, model } from "mongoose";
 import { TUser } from "./users.interface";
+import bcrypt from 'bcrypt';
+import config from "../../config";
 
 // user schema
 const UserSchema = new Schema<TUser>({
     id: {
         type: String,
-        required: [true, 'id is required']
+        required: [true, 'id is required'],
+        unique: true
     },
     role: {
         type: String,
@@ -41,7 +44,11 @@ const UserSchema = new Schema<TUser>({
     timestamps: true
 });
 
-
+// hash password before save in DB
+UserSchema.pre('save', async function (next) {
+    this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt));
+    next();
+});
 
 // create user model
 export const UserModel = model<TUser>('user', UserSchema);

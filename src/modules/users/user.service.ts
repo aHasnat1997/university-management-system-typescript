@@ -1,6 +1,8 @@
+import mongoose from "mongoose";
 import { TStudent } from "../students/student.interface";
 import { StudentModel } from "../students/student.model";
 import { UserModel } from "./user.model";
+import generateStudentID from "./user.utils";
 import { TUser } from "./users.interface";
 
 /**
@@ -9,8 +11,8 @@ import { TUser } from "./users.interface";
  * @returns { Promise } student data
  */
 const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | undefined> => {
-    const userData: TUser = {
-        id: '2023020001',
+    const userData: Partial<TUser> = {
+        // id: await generateStudentID('205001'),
         role: 'student',
         password: '#Password123',
         needChangePassword: true,
@@ -18,14 +20,33 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         isDeleted: false
     };
 
-    const newInsertedUser = await UserModel.create(userData);
+    const section = await mongoose.startSession();
+    try {
+        section.startTransaction();
+        userData.id = await generateStudentID('205001');
 
-    if (Object.keys(newInsertedUser).length) {
-        payload.userId = newInsertedUser._id;
-        payload.id = newInsertedUser.id;
+        const newInsertedUser = await UserModel.create([userData], { section });
+        // if (Object.keys(newInsertedUser).length)
+        if (!newInsertedUser.length) {
+            throw new Error('Failed to cerate user...');
+        }
 
-        const newStudent = await StudentModel.create(payload);
-        return newStudent;
+        payload.userId = newInsertedUser[0]._id;
+        payload.id = newInsertedUser[0].id;
+
+        const newStudent = await StudentModel.create([payload], { section });
+        if (!newStudent) {
+            throw new Error('Failed to cerate student...');
+        }
+
+        await section.commitTransaction();
+        await section.endSession();
+
+        return newStudent[0];
+    } catch (error) {
+        await section.abortTransaction();
+        await section.endSession();
+        throw new Error('Failed to create student...');
     }
 };
 
