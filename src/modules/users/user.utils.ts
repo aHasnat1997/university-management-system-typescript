@@ -1,19 +1,23 @@
 import { UserModel } from "./user.model";
 
 
-const generateStudentID = async (payload: string): Promise<string> => {
-    let currentId = payload + '0000';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const generateStudentID = async (payload: any): Promise<string> => {
+    let currentId = '0000';
 
-    const findThisId = await UserModel.find({ role: 'student' });
-    findThisId.forEach(student => {
-        if (findThisId) {
-            currentId = student.id;
-        }
-    });
-    const newId = (Number(currentId) + 1).toString().padStart(4, '0');
-    currentId = newId;
-    console.log(currentId);
-    return currentId;
+    const findStudentLastId = await UserModel.findOne({ role: 'student' }, { id: 1, _id: 0 }).sort({ createdAt: -1 });
+    const lastStudentYear = findStudentLastId?.id?.substring(0, 4);
+    const lastStudentSemester = findStudentLastId?.id?.substring(4, 6);
+    const currentStudentYear = payload.year;
+    const currentStudentSemester = payload.semester;
+
+    if (findStudentLastId && lastStudentYear === currentStudentYear && lastStudentSemester === currentStudentSemester) {
+        currentId = findStudentLastId.id.substring(6);
+    }
+
+    let newId = (Number(currentId) + 1).toString().padStart(4, '0');
+    newId = `${payload.year}${payload.semester}${newId}`;
+    return newId;
 
 };
 export default generateStudentID;

@@ -20,13 +20,17 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         isDeleted: false
     };
 
+    const demoSemester = {
+        year: '2050',
+        semester: '01'
+    }
+
     const section = await mongoose.startSession();
     section.startTransaction();
     try {
-        userData.id = await generateStudentID('205001');
+        userData.id = await generateStudentID(demoSemester);
 
         const newInsertedUser = await UserModel.create([userData], { section });
-        // if (Object.keys(newInsertedUser).length)
         if (!newInsertedUser.length) {
             throw new Error('Failed to cerate user...');
         }
@@ -46,11 +50,17 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
     } catch (error) {
         await section.abortTransaction();
         await section.endSession();
-        throw new Error('Something went wrong...!!!');
+        throw new Error('Something went wrong...');
     }
 };
 
+const getAllUsersFromDB = async (): Promise<TUser[]> => {
+    const result = await UserModel.find();
+    return result
+}
+
 // exporting user services
 export const UserServices = {
-    createUserAsStudentIntoDB
+    createUserAsStudentIntoDB,
+    getAllUsersFromDB
 };

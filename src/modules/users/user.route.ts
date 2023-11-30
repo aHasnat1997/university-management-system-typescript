@@ -7,4 +7,6 @@ const userRoute = Router();
 // student crate route
 userRoute.post('/students', UserControllers.createUserAsStudent);
 
+userRoute.get('/', UserControllers.getAllUsers);
+
 export default userRoute;
