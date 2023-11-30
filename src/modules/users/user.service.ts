@@ -21,8 +21,8 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
     };
 
     const section = await mongoose.startSession();
+    section.startTransaction();
     try {
-        section.startTransaction();
         userData.id = await generateStudentID('205001');
 
         const newInsertedUser = await UserModel.create([userData], { section });
@@ -46,7 +46,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
     } catch (error) {
         await section.abortTransaction();
         await section.endSession();
-        throw new Error('Failed to create student...');
+        throw new Error('Something went wrong...!!!');
     }
 };
 
