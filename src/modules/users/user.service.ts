@@ -12,7 +12,6 @@ import { TUser } from "./users.interface";
  */
 const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | undefined> => {
     const userData: Partial<TUser> = {
-        // id: await generateStudentID('205001'),
         role: 'student',
         password: '#Password123',
         needChangePassword: true,
@@ -25,12 +24,12 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         semester: '01'
     }
 
-    const section = await mongoose.startSession();
-    section.startTransaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         userData.id = await generateStudentID(demoSemester);
 
-        const newInsertedUser = await UserModel.create([userData], { section });
+        const newInsertedUser = await UserModel.create([userData], { session });
         if (!newInsertedUser.length) {
             throw new Error('Failed to cerate user...');
         }
@@ -38,22 +37,26 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         payload.userId = newInsertedUser[0]._id;
         payload.id = newInsertedUser[0].id;
 
-        const newStudent = await StudentModel.create([payload], { section });
+        const newStudent = await StudentModel.create([payload], { session });
         if (!newStudent) {
             throw new Error('Failed to cerate student...');
         }
 
-        await section.commitTransaction();
-        await section.endSession();
+        await session.commitTransaction();
+        await session.endSession();
 
         return newStudent[0];
     } catch (error) {
-        await section.abortTransaction();
-        await section.endSession();
+        await session.abortTransaction();
+        await session.endSession();
         throw new Error('Something went wrong...');
     }
 };
 
+/**
+ * Get all users from DB
+ * @returns array of all users
+ */
 const getAllUsersFromDB = async (): Promise<TUser[]> => {
     const result = await UserModel.find();
     return result

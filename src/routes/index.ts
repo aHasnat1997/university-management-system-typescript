@@ -1,14 +1,24 @@
 import { Router } from "express";
-import userRoute from "../modules/users/user.route";
+import UserRoute from "../modules/users/user.route";
+import { StudentRoutes } from "../modules/students/student.route";
 
 // create route using express router
 export const AllRoutes = Router();
 
+// all modules routes array type
+type TModulesRoutes = {
+    path: string,
+    route: Router
+}
 // all modules routes array
-const modulesRoutes = [
+const modulesRoutes: TModulesRoutes[] = [
     {
         path: '/users',
-        route: userRoute
+        route: UserRoute
+    },
+    {
+        path: '/students',
+        route: StudentRoutes
     }
 ]
 

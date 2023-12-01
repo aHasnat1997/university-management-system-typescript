@@ -16,6 +16,7 @@ const createUserAsStudent = handelAsyncReq(async (req: Request, res: Response): 
         doc: result
     })
 });
+// with out any handelAsyncReq and handlesResponse
 // const createUserAsStudent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 //     try {
 //         const studentData = req.body;

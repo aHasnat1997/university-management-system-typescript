@@ -44,6 +44,19 @@ const UserSchema = new Schema<TUser>({
     timestamps: true
 });
 
+/**
+ * response json object
+ * @returns response json with out _id, __v, isDeleted and password
+ */
+UserSchema.methods.toJSON = function () {
+    const userData = this.toObject();
+    delete userData.password;
+    delete userData._id;
+    delete userData.__v;
+    delete userData.isDeleted;
+    return userData;
+};
+
 // hash password before save in DB
 UserSchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt));

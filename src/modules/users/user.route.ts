@@ -2,11 +2,11 @@ import { Router } from "express";
 import { UserControllers } from "./user.controller";
 
 // create user route using express router
-const userRoute = Router();
+const UserRoute = Router();
 
 // student crate route
-userRoute.post('/students', UserControllers.createUserAsStudent);
+UserRoute.post('/students', UserControllers.createUserAsStudent);
 
-userRoute.get('/', UserControllers.getAllUsers);
+UserRoute.get('/', UserControllers.getAllUsers);
 
-export default userRoute;
+export default UserRoute;
