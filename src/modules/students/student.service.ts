@@ -16,7 +16,7 @@ const getAllStudentsFromDB = async (): Promise<TStudent[]> => {
  * @returns single student
  */
 const getSingleStudentFromDB = async (id: string): Promise<TStudent | null> => {
-    const result = await StudentModel.findOne({ userId: id });
+    const result = await StudentModel.findOne({ id: id });
     return result
 };
 
