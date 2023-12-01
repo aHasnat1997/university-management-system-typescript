@@ -53,6 +53,10 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
     }
 };
 
+/**
+ * Get all users from DB
+ * @returns array of all users
+ */
 const getAllUsersFromDB = async (): Promise<TUser[]> => {
     const result = await UserModel.find();
     return result
