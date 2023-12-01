@@ -2,8 +2,8 @@ import { Router } from "express";
 import { StudentControllers } from "./student.controller";
 
 
-export const StudentRoute = Router();
+export const StudentRoutes = Router();
 
-StudentRoute.get('/', StudentControllers.getAllStudent);
+StudentRoutes.get('/', StudentControllers.getAllStudent);
 
-StudentRoute.get('/:userId', StudentControllers.getSingleStudent);
+StudentRoutes.get('/:userId', StudentControllers.getSingleStudent);
