@@ -46,7 +46,7 @@ const UserSchema = new Schema<TUser>({
 
 /**
  * response json object
- * @returns response json
+ * @returns response json with out _id, __v, isDeleted and password
  */
 UserSchema.methods.toJSON = function () {
     const userData = this.toObject();

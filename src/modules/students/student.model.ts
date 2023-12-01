@@ -133,6 +133,23 @@ const StudentSchema = new Schema<TStudent>({
         type: Boolean,
         default: false,
     },
+}, {
+    timestamps: true
 });
+
+/**
+ * response json object
+ * @returns response json with out _id, __v and isDeleted
+ */
+StudentSchema.methods.toJSON = function () {
+    const studentJSON = this.toObject();
+    delete studentJSON._id;
+    delete studentJSON.name._id;
+    delete studentJSON.guardian._id;
+    delete studentJSON.localGuardian._id;
+    delete studentJSON.__v;
+    delete studentJSON.isDeleted;
+    return studentJSON
+}
 
 export const StudentModel = model<TStudent>('student', StudentSchema);

@@ -17,7 +17,10 @@ const getAllStudentsFromDB = async (): Promise<TStudent[]> => {
  */
 const getSingleStudentFromDB = async (id: string): Promise<TStudent | null> => {
     const result = await StudentModel.findOne({ id: id });
-    return result
+    if (result !== null) {
+        return result
+    }
+    throw new Error('No Students found');
 };
 
 export const StudentService = {
