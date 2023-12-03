@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { TGuardian, TLocalGuardian, TStudent, TUserName } from "./student.interface";
+import { TGuardian, TLocalGuardian, TStudent, TStudentName } from "./student.interface";
 
-const UserNameSchema = new Schema<TUserName>({
+const StudentNameSchema = new Schema<TStudentName>({
     firstName: {
         type: String,
         required: [true, 'First Name is required'],
@@ -76,10 +76,10 @@ const StudentSchema = new Schema<TStudent>({
         type: Schema.Types.ObjectId,
         required: [true, 'User id is required'],
         unique: true,
-        ref: 'user',
+        ref: 'users',
     },
     name: {
-        type: UserNameSchema,
+        type: StudentNameSchema,
         required: [true, 'Name is required'],
     },
     gender: {
