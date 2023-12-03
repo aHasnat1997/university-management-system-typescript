@@ -33,7 +33,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         const newInsertedUser = await UserModel.create([userData], { session });
         if (!newInsertedUser.length) {
             // throw new Error('Failed to cerate user...');
-            throw new AppError(401, 'Failed to cerate user...');
+            throw new AppError(400, 'Failed to cerate user...');
         }
 
         payload.userId = newInsertedUser[0]._id;
@@ -42,7 +42,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         const newStudent = await StudentModel.create([payload], { session });
         if (!newStudent) {
             // throw new Error('Failed to cerate student...');
-            throw new AppError(401, 'Failed to cerate student...');
+            throw new AppError(400, 'Failed to cerate student...');
         }
 
         await session.commitTransaction();
@@ -53,7 +53,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         await session.abortTransaction();
         await session.endSession();
         // throw new Error('Something went wrong...');
-        throw new AppError(401, 'Something went wrong...')
+        throw new AppError(400, 'Something went wrong...')
     }
 };
 
