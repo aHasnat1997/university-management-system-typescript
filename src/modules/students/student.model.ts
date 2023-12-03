@@ -143,12 +143,8 @@ const StudentSchema = new Schema<TStudent>({
  */
 StudentSchema.methods.toJSON = function () {
     const studentJSON = this.toObject();
-    delete studentJSON._id;
-    delete studentJSON.name._id;
-    delete studentJSON.guardian._id;
-    delete studentJSON.localGuardian._id;
-    delete studentJSON.__v;
-    delete studentJSON.isDeleted;
+    const deleteFields = ['_id', 'name._id', 'guardian._id', 'localGuardian._id', '__v', 'isDeleted'];
+    deleteFields.forEach(del => delete studentJSON[del]);
     return studentJSON
 }
 
