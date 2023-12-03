@@ -5,11 +5,13 @@ import { UserModel } from "./user.model";
 import generateStudentID from "./user.utils";
 import { TUser } from "./users.interface";
 import AppError from "../../errors/AppError";
+import { TAdmin } from "../admins/admin.interface";
+import { AdminModel } from "../admins/admin.model";
 
 /**
  * create student in DB
  * @param payload student json data
- * @returns { Promise } student data
+ * @returns student data
  */
 const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | undefined> => {
     const userData: Partial<TUser> = {
@@ -58,6 +60,50 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
 };
 
 /**
+ * create admin in DB
+ * @param payload admin json data
+ * @returns admin data
+ */
+const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefined> => {
+    const userData: Partial<TUser> = {
+        role: 'faculty',
+        password: '#Password123',
+        needChangePassword: true,
+        status: 'progress',
+        isDeleted: false,
+    };
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        userData.id = 'F-0002';
+        const newAddUser = await UserModel.create([userData], { session });
+
+        if (!newAddUser) {
+            throw new AppError(400, 'User not cerated...👎');
+        }
+
+        payload.userId = newAddUser[0]._id;
+        payload.id = newAddUser[0].id;
+
+        const addNewAdmin = await AdminModel.create([payload], { session });
+        if (!addNewAdmin) {
+            throw new AppError(400, 'Admin not cerated...👎');
+        }
+
+        session.commitTransaction();
+        session.endSession();
+
+        return addNewAdmin[0];
+
+    } catch (error) {
+        session.abortTransaction();
+        session.endSession();
+        throw new AppError(400, 'Something went wrong...');
+    }
+};
+
+/**
  * Get all users from DB
  * @returns array of all users
  */
@@ -69,5 +115,6 @@ const getAllUsersFromDB = async (): Promise<TUser[]> => {
 // exporting user services
 export const UserServices = {
     createUserAsStudentIntoDB,
+    createUserAsAdminIntoDB,
     getAllUsersFromDB
 };
