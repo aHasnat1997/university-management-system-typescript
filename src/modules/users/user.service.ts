@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { TStudent } from "../students/student.interface";
 import { StudentModel } from "../students/student.model";
 import { UserModel } from "./user.model";
-import generateStudentID from "./user.utils";
+import { generateAdminID, generateStudentID } from "./user.utils";
 import { TUser } from "./users.interface";
 import AppError from "../../errors/AppError";
 import { TAdmin } from "../admins/admin.interface";
@@ -76,7 +76,7 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        userData.id = 'F-0002';
+        userData.id = await generateAdminID();
         const newAddUser = await UserModel.create([userData], { session });
 
         if (!newAddUser) {
@@ -91,14 +91,14 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
             throw new AppError(400, 'Admin not cerated...👎');
         }
 
-        session.commitTransaction();
-        session.endSession();
+        await session.commitTransaction();
+        await session.endSession();
 
         return addNewAdmin[0];
 
     } catch (error) {
-        session.abortTransaction();
-        session.endSession();
+        await session.abortTransaction();
+        await session.endSession();
         throw new AppError(400, 'Something went wrong...');
     }
 };
