@@ -1,3 +1,4 @@
+import AppError from "../../errors/AppError";
 import { TStudent } from "./student.interface";
 import { StudentModel } from "./student.model";
 
@@ -20,7 +21,7 @@ const getSingleStudentFromDB = async (id: string): Promise<TStudent | null> => {
     if (result !== null) {
         return result
     }
-    throw new Error('No Students found');
+    throw new AppError(400, 'No Students found');
 };
 
 export const StudentService = {

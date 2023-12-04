@@ -35,6 +35,20 @@ const createUserAsStudent = handelAsyncReq(async (req: Request, res: Response): 
 //     }
 // };
 
+/**
+ * create admin in DB
+ * @param req request obj
+ * @param res response obj
+ */
+const createUserAsAdmin = handelAsyncReq(async (req: Request, res: Response): Promise<void> => {
+    const adminData = req.body;
+    const result = await UserServices.createUserAsAdminIntoDB(adminData);
+    handlesResponse(res, {
+        massage: 'admin cerated successfully...👍',
+        doc: result
+    })
+});
+
 
 const getAllUsers = handelAsyncReq(async (req: Request, res: Response): Promise<void> => {
     const result = await UserServices.getAllUsersFromDB();
@@ -48,5 +62,6 @@ const getAllUsers = handelAsyncReq(async (req: Request, res: Response): Promise<
 // export all user controllers
 export const UserControllers = {
     createUserAsStudent,
+    createUserAsAdmin,
     getAllUsers
 };

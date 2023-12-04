@@ -50,10 +50,8 @@ const UserSchema = new Schema<TUser>({
  */
 UserSchema.methods.toJSON = function () {
     const userData = this.toObject();
-    delete userData.password;
-    delete userData._id;
-    delete userData.__v;
-    delete userData.isDeleted;
+    const deleteFields = ['password', '_id', '__v', 'isDeleted'];
+    deleteFields.forEach(del => delete userData[del])
     return userData;
 };
 

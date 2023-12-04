@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserModel } from "./user.model";
 
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const generateStudentID = async (payload: any): Promise<string> => {
+export const generateStudentID = async (payload: any): Promise<string> => {
     let currentId = '0000';
 
     const findStudentLastId = await UserModel.findOne({ role: 'student' }, { id: 1, _id: 0 }).sort({ createdAt: -1 });
@@ -20,4 +20,20 @@ const generateStudentID = async (payload: any): Promise<string> => {
     return newId;
 
 };
-export default generateStudentID;
+
+
+export const generateAdminID = async (): Promise<string> => {
+    let currentId = '0000';
+    const findAdminLastId = await UserModel.findOne({ role: 'faculty' }, { id: 1, _id: 0 }).sort({ createdAt: -1 });
+    if (findAdminLastId) {
+        const lastId = findAdminLastId.id.split('-');
+        console.log(lastId);
+
+        currentId = lastId[1];
+    }
+    let newId = (Number(currentId) + 1).toString().padStart(4, '0');
+    newId = `F-${newId}`;
+    console.log(newId);
+    return newId;
+
+}
