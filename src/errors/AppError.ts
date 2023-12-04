@@ -3,7 +3,7 @@ class AppError extends Error {
 
     constructor(statusCode: number, massage: string, stack = '') {
         super(massage);
-        this.statusCode = statusCode
+        this.statusCode = statusCode;
 
         if (stack) {
             this.stack = stack

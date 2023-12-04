@@ -32,6 +32,7 @@ const createUserAsStudent = handelAsyncReq(async (req: Request, res: Response): 
 //             'massage': 'student not cerated successfully...👎',
 //             'doc': error
 //         });
+//         next(error)
 //     }
 // };
 

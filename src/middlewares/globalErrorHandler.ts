@@ -8,13 +8,14 @@ const globalErrorHandler = (
     res: Response,
     next: NextFunction,
 ) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Something went wrong!<globalErrorHandler>';
+    // const statusCode = err.statusCode || 500;
+    // const message = err.message || 'Something went wrong!<=def=>';
 
-    return res.status(statusCode).json({
+    return res.status(err.statusCode || 500).json({
         success: false,
-        message,
-        errorSources: err,
+        message: err.message,
+        error: err,
+        stack: err.stack
     });
 };
 
