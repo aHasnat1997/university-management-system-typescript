@@ -56,7 +56,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
     } catch (error: any) {
         await session.abortTransaction();
         await session.endSession();
-        // throw new Error('Something went wrong...');
+        // throw new AppError(400, 'Something went wrong...');
         // throw new Error(error);
         throw error
     }
@@ -105,9 +105,7 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
         await session.endSession();
         // throw new AppError(400, error);
         // throw new Error(error);
-        // console.log(error);
         throw error;
-        // return error;
     }
 };
 

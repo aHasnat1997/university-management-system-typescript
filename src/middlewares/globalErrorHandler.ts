@@ -14,8 +14,11 @@ const globalErrorHandler = (
     let statusCode = error.statusCode || HTTPStatusCode.InternalServerError;
     const resObject: TErrorResponse = {
         success: false,
-        message: error.message || 'Something went wrong!',
-        issue: error,
+        message: 'Something went wrong!',
+        issue: [{
+            path: '',
+            message: error.message
+        }],
         stack: error.stack
     }
 
@@ -30,7 +33,21 @@ const globalErrorHandler = (
             }
         });
         resObject.issue = errArray
-    } else if (error.code === 11000) {
+    }
+
+    else if (error instanceof mongoose.Error.CastError) {
+        statusCode = HTTPStatusCode.NotFound;
+        resObject.message = error.message;
+        const errArray = [
+            {
+                path: '',
+                message: error.message
+            }
+        ];
+        resObject.issue = errArray
+    }
+
+    else if (error.code === 11000) {
         statusCode = HTTPStatusCode.Conflict;
         resObject.message = 'Duplicate key';
         const issue = error.keyValue
