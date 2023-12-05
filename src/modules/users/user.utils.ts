@@ -27,13 +27,11 @@ export const generateAdminID = async (): Promise<string> => {
     const findAdminLastId = await UserModel.findOne({ role: 'faculty' }, { id: 1, _id: 0 }).sort({ createdAt: -1 });
     if (findAdminLastId) {
         const lastId = findAdminLastId.id.split('-');
-        console.log(lastId);
 
         currentId = lastId[1];
     }
     let newId = (Number(currentId) + 1).toString().padStart(4, '0');
     newId = `F-${newId}`;
-    console.log(newId);
     return newId;
 
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from "mongoose";
 import { TStudent } from "../students/student.interface";
 import { StudentModel } from "../students/student.model";
@@ -7,6 +8,7 @@ import { TUser } from "./users.interface";
 import AppError from "../../errors/AppError";
 import { TAdmin } from "../admins/admin.interface";
 import { AdminModel } from "../admins/admin.model";
+import config from "../../config";
 
 /**
  * create student in DB
@@ -16,7 +18,7 @@ import { AdminModel } from "../admins/admin.model";
 const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | undefined> => {
     const userData: Partial<TUser> = {
         role: 'student',
-        password: '#Password123',
+        password: config.user_default_password,
         needChangePassword: true,
         status: 'progress',
         isDeleted: false
@@ -51,11 +53,12 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
         await session.endSession();
 
         return newStudent[0];
-    } catch (error) {
+    } catch (error: any) {
         await session.abortTransaction();
         await session.endSession();
-        // throw new Error('Something went wrong...');
-        throw new AppError(400, 'Something went wrong...')
+        // throw new AppError(400, 'Something went wrong...');
+        // throw new Error(error);
+        throw error
     }
 };
 
@@ -67,7 +70,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
 const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefined> => {
     const userData: Partial<TUser> = {
         role: 'faculty',
-        password: '#Password123',
+        password: config.user_default_password,
         needChangePassword: true,
         status: 'progress',
         isDeleted: false,
@@ -77,9 +80,10 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
     session.startTransaction();
     try {
         userData.id = await generateAdminID();
+
         const newAddUser = await UserModel.create([userData], { session });
 
-        if (!newAddUser) {
+        if (!newAddUser.length) {
             throw new AppError(400, 'User not cerated...👎');
         }
 
@@ -87,7 +91,7 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
         payload.id = newAddUser[0].id;
 
         const addNewAdmin = await AdminModel.create([payload], { session });
-        if (!addNewAdmin) {
+        if (!addNewAdmin.length) {
             throw new AppError(400, 'Admin not cerated...👎');
         }
 
@@ -96,10 +100,12 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
 
         return addNewAdmin[0];
 
-    } catch (error) {
+    } catch (error: any) {
         await session.abortTransaction();
         await session.endSession();
-        throw new AppError(400, 'Something went wrong...');
+        // throw new AppError(400, error);
+        // throw new Error(error);
+        throw error;
     }
 };
 

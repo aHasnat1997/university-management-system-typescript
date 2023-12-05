@@ -1,21 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
+import { TErrorResponse } from "../interfaces/error.interface";
+import { HTTPStatusCode } from "../utils/httpCode";
+import { DuplicateKeyError, MongooseCastError, MongooseValidationError } from "../errors/HandleErrorResponse";
 
 const globalErrorHandler = (
-    err: any,
+    error: any,
     req: Request,
     res: Response,
     next: NextFunction,
 ) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Something went wrong!<globalErrorHandler>';
-
-    return res.status(statusCode).json({
+    let statusCode = error.statusCode || HTTPStatusCode.InternalServerError;
+    let resObject: TErrorResponse = {
         success: false,
-        message,
-        errorSources: err,
-    });
+        message: 'Something went wrong!',
+        issue: [{
+            path: '',
+            message: error.message
+        }]
+    }
+
+    if (error instanceof mongoose.Error.ValidationError) {
+        statusCode = HTTPStatusCode.Forbidden;
+        resObject = MongooseValidationError(error);
+    }
+
+    else if (error instanceof mongoose.Error.CastError) {
+        statusCode = HTTPStatusCode.NotFound;
+        resObject = MongooseCastError(error);
+    }
+
+    else if (error.code === 11000) {
+        statusCode = HTTPStatusCode.Conflict;
+        resObject = DuplicateKeyError(error)
+    }
+
+    resObject.stack = error.stack;
+    return res.status(statusCode).json(resObject);
 };
 
 export default globalErrorHandler;

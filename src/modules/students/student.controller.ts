@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import handelAsyncReq from "../../utils/handelAsyncReq";
+import handleAsyncReq from "../../middlewares/handelAsyncReq";
 import { StudentService } from "./student.service";
 import handlesResponse from "../../utils/handlesResponse";
 
 /**
  * Get all students 
  */
-const getAllStudent = handelAsyncReq(async (req: Request, res: Response): Promise<void> => {
+const getAllStudent = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
     const studentData = await StudentService.getAllStudentsFromDB();
     handlesResponse(res, {
         massage: 'All students fetch successfully...👍',
@@ -17,7 +17,7 @@ const getAllStudent = handelAsyncReq(async (req: Request, res: Response): Promis
 /**
  * Get single student using userId
  */
-const getSingleStudent = handelAsyncReq(async (req: Request, res: Response): Promise<void> => {
+const getSingleStudent = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
     const id = req.params.userId;
     const studentData = await StudentService.getSingleStudentFromDB(id);
     handlesResponse(res, {
