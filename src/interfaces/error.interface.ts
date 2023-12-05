@@ -6,6 +6,9 @@ export type TErrorIssue = {
 export type TErrorResponse = {
     success: false,
     message: string,
-    issue: TErrorIssue[],
+    issue: {
+        path: string,
+        message: string
+    }[],
     stack?: string
 };

@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { TErrorResponse } from "../interfaces/error.interface";
 import { HTTPStatusCode } from "../utils/httpCode";
+import { DuplicateKeyError, MongooseCastError, MongooseValidationError } from "../errors/HandleErrorResponse";
 
 const globalErrorHandler = (
     error: any,
@@ -12,54 +13,31 @@ const globalErrorHandler = (
     next: NextFunction,
 ) => {
     let statusCode = error.statusCode || HTTPStatusCode.InternalServerError;
-    const resObject: TErrorResponse = {
+    let resObject: TErrorResponse = {
         success: false,
         message: 'Something went wrong!',
         issue: [{
             path: '',
             message: error.message
-        }],
-        stack: error.stack
+        }]
     }
 
     if (error instanceof mongoose.Error.ValidationError) {
         statusCode = HTTPStatusCode.Forbidden;
-        resObject.message = error.message;
-        const errors = error.errors;
-        const errArray = Object.values(errors).map(e => {
-            return {
-                path: e.path,
-                message: e.message
-            }
-        });
-        resObject.issue = errArray
+        resObject = MongooseValidationError(error);
     }
 
     else if (error instanceof mongoose.Error.CastError) {
         statusCode = HTTPStatusCode.NotFound;
-        resObject.message = error.message;
-        const errArray = [
-            {
-                path: '',
-                message: error.message
-            }
-        ];
-        resObject.issue = errArray
+        resObject = MongooseCastError(error);
     }
 
     else if (error.code === 11000) {
         statusCode = HTTPStatusCode.Conflict;
-        resObject.message = 'Duplicate key';
-        const issue = error.keyValue
-        const errorIssue = Object.keys(issue).map(e => {
-            return {
-                path: e,
-                message: `'${issue[e]}' - this value is already excised`
-            }
-        })
-        resObject.issue = errorIssue;
+        resObject = DuplicateKeyError(error)
     }
 
+    resObject.stack = error.stack;
     return res.status(statusCode).json(resObject);
 };
 
