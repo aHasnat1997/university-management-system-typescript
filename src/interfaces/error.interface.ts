@@ -1,10 +1,11 @@
 export type TErrorIssue = {
     path: string,
-    massage: string
+    message: string
 };
 
 export type TErrorResponse = {
     success: false,
     message: string,
-    issue: TErrorIssue
+    issue: TErrorIssue[],
+    stack?: string
 };

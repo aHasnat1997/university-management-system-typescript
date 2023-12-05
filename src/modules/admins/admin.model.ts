@@ -54,7 +54,8 @@ const AdminSchema = new Schema<TAdmin>({
     contactNo: {
         type: String,
         required: [true, 'ContactNo is required'],
-        trim: true
+        trim: true,
+        unique: true
     },
     emergencyContactNo: {
         type: String,
