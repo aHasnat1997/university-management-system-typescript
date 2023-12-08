@@ -28,7 +28,6 @@ const TeacherSchema = new Schema<TTeacher>({
     userId: {
         type: Schema.Types.ObjectId,
         required: [true, 'ID name is required'],
-        unique: true,
         ref: 'users'
     },
     name: {
