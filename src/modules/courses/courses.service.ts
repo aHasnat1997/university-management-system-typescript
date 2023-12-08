@@ -18,7 +18,7 @@ const createCourseIntoDB = async (payload: TCourses): Promise<TCourses> => {
  * @returns all courses data
  */
 const getAllCoursesFromDB = async (): Promise<TCourses[]> => {
-    const result = await CoursesModel.find();
+    const result = await CoursesModel.find().populate('teachers').populate('prerequisites');
     return result;
 };
 
@@ -28,7 +28,7 @@ const getAllCoursesFromDB = async (): Promise<TCourses[]> => {
  * @returns course data
  */
 const getSingleCoursesFromDB = async (id: string): Promise<TCourses | null> => {
-    const result = await CoursesModel.findById(id).populate('teachers');
+    const result = await CoursesModel.findById(id).populate('teachers').populate('prerequisites');
     if (result === null) {
         throw new AppError(HTTPStatusCode.NotFound, 'No user found...')
     }
