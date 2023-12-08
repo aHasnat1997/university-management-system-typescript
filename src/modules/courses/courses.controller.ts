@@ -39,8 +39,21 @@ const getSingleCourses = handleAsyncReq(async (req: Request, res: Response): Pro
     })
 })
 
+/**
+ * delete single course with async request function
+ */
+const deleteCourse = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+    const result = await CoursesService.deleteCourseInDB(id);
+    handlesResponse(res, {
+        massage: 'Course is delete successfully...',
+        doc: result
+    });
+})
+
 export const CourseController = {
     createCourse,
     getAllCorses,
-    getSingleCourses
+    getSingleCourses,
+    deleteCourse
 }

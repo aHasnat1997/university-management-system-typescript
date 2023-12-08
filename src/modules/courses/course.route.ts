@@ -13,4 +13,7 @@ CourseRoute.get('/', CourseController.getAllCorses);
 // get single course route
 CourseRoute.get('/:id', CourseController.getSingleCourses);
 
+// get single course route
+CourseRoute.delete('/:id', CourseController.deleteCourse);
+
 export default CourseRoute;

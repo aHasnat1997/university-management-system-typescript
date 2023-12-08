@@ -33,4 +33,27 @@ const CoursesSchema = new Schema<TCourses>({
 });
 
 
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const deleteFun = function (this: any, next: any) {
+    this.find({ isDeleted: { $ne: true } });
+    next();
+}
+CoursesSchema.pre('find', deleteFun);
+CoursesSchema.pre('findOne', deleteFun);
+CoursesSchema.pre('findOneAndUpdate', deleteFun);
+
+/**
+ * response json object
+ * @returns response json with out _id, __v and isDeleted
+ */
+CoursesSchema.methods.toJSON = function () {
+    const courseJSON = this.toObject();
+    const deleteFields = ['__v', 'isDeleted'];
+    deleteFields.forEach(del => delete courseJSON[del]);
+    return courseJSON
+}
+
+
+
 export const CoursesModel = model<TCourses>('course', CoursesSchema);
