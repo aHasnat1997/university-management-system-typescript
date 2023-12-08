@@ -17,10 +17,12 @@ const CoursesSchema = new Schema<TCourses>({
         required: [true, 'code is required']
     },
     prerequisites: {
-        type: [Schema.Types.ObjectId]
+        type: [Schema.Types.ObjectId],
+        ref: 'course'
     },
     teachers: {
-        type: [Schema.Types.ObjectId]
+        type: [Schema.Types.ObjectId],
+        ref: 'teacher'
     },
     isDeleted: {
         type: Boolean,
