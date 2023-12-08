@@ -13,8 +13,8 @@ const UserSchema = new Schema<TUser>({
     role: {
         type: String,
         enum: {
-            values: ['student', 'teacher', 'faculty'],
-            message: 'role must be student or teacher or faculty. But you give {VALUE}'
+            values: ['student', 'teacher', 'admin'],
+            message: 'role must be student or teacher or admin. But you give {VALUE}'
         },
         required: [true, 'role is required']
     },
