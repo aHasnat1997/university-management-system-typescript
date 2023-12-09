@@ -2,6 +2,7 @@ import { Router } from "express";
 import UserRoute from "../modules/users/user.route";
 import { StudentRoutes } from "../modules/students/student.route";
 import AdminRoute from "../modules/admins/admin.route";
+import CourseRoute from "../modules/courses/course.route";
 
 // create route using express router
 export const AllRoutes = Router();
@@ -24,6 +25,10 @@ const modulesRoutes: TModulesRoutes[] = [
     {
         path: '/admins',
         route: AdminRoute
+    },
+    {
+        path: '/courses',
+        route: CourseRoute
     }
 ]
 

@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UserModel } from "./user.model";
 
-
+/**
+ * generate unique student id 
+ * @param payload semester and year object
+ * @returns student id 
+ */
 export const generateStudentID = async (payload: any): Promise<string> => {
     let currentId = '0000';
 
@@ -21,17 +25,38 @@ export const generateStudentID = async (payload: any): Promise<string> => {
 
 };
 
-
+/**
+ * generate unique admin id 
+ * @returns admin id 
+ */
 export const generateAdminID = async (): Promise<string> => {
     let currentId = '0000';
-    const findAdminLastId = await UserModel.findOne({ role: 'faculty' }, { id: 1, _id: 0 }).sort({ createdAt: -1 });
+    const findAdminLastId = await UserModel.findOne({ role: 'admin' }, { id: 1, _id: 0 }).sort({ createdAt: -1 });
     if (findAdminLastId) {
         const lastId = findAdminLastId.id.split('-');
 
         currentId = lastId[1];
     }
     let newId = (Number(currentId) + 1).toString().padStart(4, '0');
-    newId = `F-${newId}`;
+    newId = `A-${newId}`;
     return newId;
 
-}
+};
+
+/**
+ * generate unique teacher id 
+ * @returns teacher id 
+ */
+export const generateTeacherID = async (): Promise<string> => {
+    let currentId = '0000';
+    const findTeacherLastId = await UserModel.findOne({ role: 'teacher' }, { id: 1, _id: 0 }).sort({ createdAt: -1 });
+    if (findTeacherLastId) {
+        const lastId = findTeacherLastId.id.split('-');
+
+        currentId = lastId[1];
+    }
+    let newId = (Number(currentId) + 1).toString().padStart(4, '0');
+    newId = `T-${newId}`;
+    return newId;
+
+};

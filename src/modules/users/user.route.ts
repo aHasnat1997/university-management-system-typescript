@@ -10,6 +10,7 @@ UserRoute.post('/students', UserControllers.createUserAsStudent);
 // admin crate route
 UserRoute.post('/admins', UserControllers.createUserAsAdmin);
 
-UserRoute.get('/', UserControllers.getAllUsers);
+// teacher crate route
+UserRoute.post('/teachers', UserControllers.createUserAsTeacher);
 
 export default UserRoute;

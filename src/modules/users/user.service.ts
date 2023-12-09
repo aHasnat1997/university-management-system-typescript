@@ -3,12 +3,14 @@ import mongoose from "mongoose";
 import { TStudent } from "../students/student.interface";
 import { StudentModel } from "../students/student.model";
 import { UserModel } from "./user.model";
-import { generateAdminID, generateStudentID } from "./user.utils";
+import { generateAdminID, generateStudentID, generateTeacherID } from "./user.utils";
 import { TUser } from "./users.interface";
 import AppError from "../../errors/AppError";
 import { TAdmin } from "../admins/admin.interface";
 import { AdminModel } from "../admins/admin.model";
 import config from "../../config";
+import { TTeacher } from "../teachers/teacher.interface";
+import { TeacherModel } from "../teachers/teacher.model";
 
 /**
  * create student in DB
@@ -69,7 +71,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
  */
 const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefined> => {
     const userData: Partial<TUser> = {
-        role: 'faculty',
+        role: 'admin',
         password: config.user_default_password,
         needChangePassword: true,
         status: 'progress',
@@ -110,17 +112,56 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
 };
 
 /**
- * Get all users from DB
- * @returns array of all users
+ * create teacher in DB
+ * @param payload teacher json data
+ * @returns teacher data
  */
-const getAllUsersFromDB = async (): Promise<TUser[]> => {
-    const result = await UserModel.find();
-    return result
-}
+const createUserAsTeacherIntoDB = async (payload: TTeacher): Promise<TTeacher | undefined> => {
+    const userData: Partial<TUser> = {
+        role: 'teacher',
+        password: config.user_default_password,
+        needChangePassword: true,
+        status: 'progress',
+        isDeleted: false,
+    };
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        userData.id = await generateTeacherID();
+
+        const newAddUser = await UserModel.create([userData], { session });
+
+        if (!newAddUser.length) {
+            throw new AppError(400, 'User not cerated...👎');
+        }
+
+        payload.userId = newAddUser[0]._id;
+        payload.id = newAddUser[0].id;
+
+        const addNewTeacher = await TeacherModel.create([payload], { session });
+        if (!addNewTeacher.length) {
+            throw new AppError(400, 'Teacher not cerated...👎');
+        }
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return addNewTeacher[0];
+
+    } catch (error: any) {
+        await session.abortTransaction();
+        await session.endSession();
+        // throw new AppError(400, error);
+        // throw new Error(error);
+        throw error;
+    }
+};
+
 
 // exporting user services
 export const UserServices = {
     createUserAsStudentIntoDB,
     createUserAsAdminIntoDB,
-    getAllUsersFromDB
+    createUserAsTeacherIntoDB,
 };
