@@ -19,6 +19,7 @@ const TeacherNameSchema = new Schema<TTeacherName>({
     },
 });
 
+
 const TeacherSchema = new Schema<TTeacher>({
     id: {
         type: String,
