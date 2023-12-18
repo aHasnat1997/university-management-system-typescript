@@ -1,10 +1,10 @@
 import { Schema, model } from "mongoose";
-import { TUser } from "./users.interface";
+import { TUser, TUserModel } from "./users.interface";
 import bcrypt from 'bcrypt';
 import config from "../../config";
 
 // user schema
-const UserSchema = new Schema<TUser>({
+const UserSchema = new Schema<TUser, TUserModel>({
     id: {
         type: String,
         required: [true, 'id is required'],
@@ -61,5 +61,11 @@ UserSchema.pre('save', async function (next) {
     next();
 });
 
+
+UserSchema.static('matchedPassword', async function matchedPassword(plaintextPassword: string, hashPassword: string) {
+    return await bcrypt.compare(plaintextPassword, hashPassword)
+})
+
+
 // create user model
-export const UserModel = model<TUser>('user', UserSchema);
+export const UserModel = model<TUser, TUserModel>('user', UserSchema);

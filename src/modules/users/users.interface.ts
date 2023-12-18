@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 // user type
 export type TUser = {
     id: string,
@@ -7,3 +9,7 @@ export type TUser = {
     status: 'progress' | 'blocked',
     isDeleted?: boolean
 };
+
+export type TUserModel = Model<TUser> & {
+    matchedPassword(plaintextPassword: string, hashPassword: string): boolean
+}

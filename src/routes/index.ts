@@ -3,6 +3,7 @@ import UserRoute from "../modules/users/user.route";
 import { StudentRoutes } from "../modules/students/student.route";
 import AdminRoute from "../modules/admins/admin.route";
 import CourseRoute from "../modules/courses/course.route";
+import { AuthRoute } from "../modules/auth/auth.route";
 
 // create route using express router
 export const AllRoutes = Router();
@@ -29,6 +30,10 @@ const modulesRoutes: TModulesRoutes[] = [
     {
         path: '/courses',
         route: CourseRoute
+    },
+    {
+        path: '/auth',
+        route: AuthRoute
     }
 ]
 
