@@ -11,8 +11,9 @@ const LoginUser = async (payload: TAuth) => {
         throw new AppError(HTTPStatusCode.Forbidden, 'User is already deleted!');
     } else if (user?.status === 'blocked') {
         throw new AppError(HTTPStatusCode.Forbidden, 'User is blocked!');
+    } else if (!(await UserModel.matchedPassword(payload.password, user.password))) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'Wrong Password');
     }
-
 
 
     return 'User Login...';
