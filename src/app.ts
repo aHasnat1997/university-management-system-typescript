@@ -3,12 +3,14 @@ import cors from 'cors';
 import path from 'path';
 import { AllRoutes } from './routes';
 import globalErrorHandler from './middlewares/globalErrorHandler';
+import cookieParser from 'cookie-parser';
 
 // Express application cerated
 const app: Application = express();
 
 // express parsers
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 
 // all valid routes

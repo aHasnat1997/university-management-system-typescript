@@ -26,7 +26,8 @@ const LoginUser = async (payload: TAuth) => {
 
     return {
         accessToken,
-        refreshToken
+        refreshToken,
+        user
     };
 };
 
