@@ -64,7 +64,7 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.static('matchedPassword', async function matchedPassword(plaintextPassword: string, hashPassword: string) {
     return await bcrypt.compare(plaintextPassword, hashPassword)
-})
+});
 
 
 // create user model
