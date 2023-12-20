@@ -61,10 +61,10 @@ UserSchema.pre('save', async function (next) {
     next();
 });
 
-
+// check user password is matched or not
 UserSchema.static('matchedPassword', async function matchedPassword(plaintextPassword: string, hashPassword: string) {
     return await bcrypt.compare(plaintextPassword, hashPassword)
-})
+});
 
 
 // create user model
