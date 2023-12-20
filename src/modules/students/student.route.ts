@@ -5,6 +5,6 @@ import { authGuard } from "../../middlewares/authGuard";
 
 export const StudentRoutes = Router();
 
-StudentRoutes.get('/', authGuard('faculty'), StudentControllers.getAllStudent);
+StudentRoutes.get('/', authGuard('admin'), StudentControllers.getAllStudent);
 
 StudentRoutes.get('/:userId', StudentControllers.getSingleStudent);
