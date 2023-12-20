@@ -1,10 +1,15 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import AppError from "../../errors/AppError";
 import { HTTPStatusCode } from "../../utils/httpCode";
 import { UserModel } from "../users/user.model";
 import { TAuth } from "./auth.interface";
 import config from "../../config";
 
+/**
+ * user login service
+ * @param payload user id and password object
+ * @returns accessToken, refreshToken, user data
+ */
 const LoginUser = async (payload: TAuth) => {
     const user = await UserModel.findOne({ id: payload.id });
     if (!user) {
@@ -31,6 +36,34 @@ const LoginUser = async (payload: TAuth) => {
     };
 };
 
+/**
+ * get new access token
+ * @param payload refresh token
+ * @returns null
+ */
+const RefreshAccessToken = async (payload: string) => {
+    const decoded = jwt.verify(payload, config.jwt_refresh_secret as string) as JwtPayload;
+    const user = await UserModel.findOne({ id: decoded.userId });
+    if (!user) {
+        throw new AppError(HTTPStatusCode.NotFound, 'This user is not found!');
+    } else if (user?.isDeleted) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is already deleted!');
+    } else if (user?.status === 'blocked') {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is blocked!');
+    }
+
+    const jwtPayload = {
+        userId: decoded.userId,
+        role: decoded.role
+    }
+    const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, { expiresIn: config.jwt_access_expires_in });
+    return {
+        accessToken,
+        user
+    };
+}
+
 export const AuthService = {
-    LoginUser
+    LoginUser,
+    RefreshAccessToken
 };

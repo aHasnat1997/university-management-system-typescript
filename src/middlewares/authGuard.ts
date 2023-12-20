@@ -21,7 +21,7 @@ export const authGuard = (...roles: string[]) => {
         } else if (roles && !roles.includes(decoded?.role)) {
             throw new AppError(HTTPStatusCode.Unauthorized, 'Role Unauthorized...');
         }
-        console.log('test', decoded);
+        // console.log('test', decoded);
 
         next();
     });
