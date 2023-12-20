@@ -21,10 +21,10 @@ const UserLogin = handleAsyncReq(async (req: Request, res: Response): Promise<vo
  */
 const NewAccessToken = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
     const result = await AuthService.RefreshAccessToken(req?.cookies?.refreshToken);
-    // res.cookie('accessToken', result.accessToken, { httpOnly: true });
+    res.cookie('accessToken', result.accessToken, { httpOnly: true });
     handlesResponse(res, {
         massage: 'Token refresh successfully!',
-        doc: result
+        doc: result.user
     });
 });
 
