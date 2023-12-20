@@ -12,6 +12,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
+app.use(express.static('view'));
 
 // all valid routes
 app.use('/api/v1', AllRoutes);

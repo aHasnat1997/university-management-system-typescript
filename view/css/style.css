@@ -1,0 +1,186 @@
+/* font-family: 'Oxygen', sans-serif;
+font-family: 'Pathway Gothic One', sans-serif; */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family: "Oxygen", sans-serif;
+}
+
+header {
+  background-image: url(../img/top.png);
+  width: 100%;
+  height: 200px;
+  border-bottom: 8px solid #00f2ff;
+}
+
+.head {
+  width: 65%;
+  margin: auto;
+}
+
+.logo {
+  padding-top: 40px;
+  font-size: 60px;
+  font-family: "Oxygen", sans-serif;
+}
+
+.logo a {
+  text-decoration: none;
+  color: #ffffff;
+  font-family: "Pathway Gothic One", sans-serif;
+}
+
+.logo a span {
+  color: #ffff00;
+}
+
+.logo a span:hover {
+  color: #fff;
+}
+
+.sticky {
+  position: sticky;
+  top: 0px;
+}
+
+/* .nav{
+  border: 1px solid;
+} */
+.nav ul {
+  list-style-type: none;
+  float: right;
+}
+
+.nav ul li {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.nav ul li a {
+  transition: .5s;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #00f2ff63;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.nav ul li a:hover {
+  background-color: #00f2ff;
+  color: #000000;
+}
+
+.body {
+  background-image: url(../img/download.jfif);
+  width: 100%;
+  height: 900px;
+  margin-bottom: 0px;
+}
+
+.content {
+  margin: auto;
+  width: 65%;
+  height: 500px;
+}
+
+.content .mainCont {
+  width: 70%;
+  float: left;
+  padding-top: 40px;
+}
+
+.ulPad {
+  padding-left: 20px;
+}
+
+.ul1 {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.content .asid {
+  width: 30%;
+  float: left;
+}
+
+.link {
+  color: #ffae00;
+}
+
+.link:hover {
+  text-decoration: none;
+}
+
+.text1 {
+  color: #ffffff;
+}
+
+.text3 {
+  color: #ffff00;
+}
+
+.text2 {
+  color: #bcbcbc;
+}
+
+.asid .box {
+  background-color: #bcbcbc1b;
+  border: 0px solid #808080;
+  border-radius: 15px;
+  padding: 5px 40px;
+  width: 100%;
+  margin: 25px;
+}
+
+.search-field {
+  display: flex;
+  gap: .5rem;
+}
+
+.searchBox {
+  margin-top: .6rem;
+  width: 60%;
+  height: 40px;
+  background-color: #adadad2c;
+  color: #bcbcbc;
+}
+
+.searchBox::placeholder {
+  color: #fff;
+  padding-left: .5rem;
+}
+
+button {
+  border: 0px;
+  background-color: #80808000;
+  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+footer {
+  background-color: #121d31;
+  margin-top: 0px;
+  padding-top: 20px;
+  margin: auto;
+  width: 100%;
+  height: 150px;
+  text-align: center;
+  color: #bcbcbc;
+}
+
+footer p a {
+  text-decoration: none;
+  color: #bcbcbc;
+}
+
+footer p a:hover {
+  color: #fff;
+}
