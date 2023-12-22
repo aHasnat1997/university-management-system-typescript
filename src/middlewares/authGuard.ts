@@ -6,13 +6,13 @@ import AppError from "../errors/AppError";
 import { HTTPStatusCode } from "../utils/httpCode";
 import { UserModel } from "../modules/users/user.model";
 
-
+type TRoles = 'student' | 'teacher' | 'admin';
 /**
  * auth guard middlewares
  * @param roles user access role
  * @returns async function
  */
-export const authGuard = (...roles: string[]) => {
+export const authGuard = (...roles: TRoles[]) => {
     return handleAsyncReq(async (req: Request, res: Response, next: NextFunction) => {
         const token = req?.cookies?.accessToken;
         const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
@@ -30,6 +30,7 @@ export const authGuard = (...roles: string[]) => {
             throw new AppError(HTTPStatusCode.Forbidden, 'User is blocked!');
         }
 
+        req.user = user;
         next();
     });
 };

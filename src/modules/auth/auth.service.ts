@@ -1,9 +1,10 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
-import AppError from "../../errors/AppError";
-import { HTTPStatusCode } from "../../utils/httpCode";
-import { UserModel } from "../users/user.model";
-import { TAuth } from "./auth.interface";
-import config from "../../config";
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import AppError from '../../errors/AppError';
+import { HTTPStatusCode } from '../../utils/httpCode';
+import { UserModel } from '../users/user.model';
+import { TAuth, TChangePassword } from './auth.interface';
+import config from '../../config';
+import bcrypt from 'bcrypt';
 
 /**
  * user login service
@@ -63,7 +64,30 @@ const RefreshAccessToken = async (payload: string) => {
     };
 }
 
+/**
+ * Change user password service
+ * @param user user data
+ * @param payload old and new password json
+ */
+const ChangeUserPassword = async (user: JwtPayload, payload: TChangePassword) => {
+    if (!(await UserModel.matchedPassword(payload?.oldPassword, user?.password))) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'Wrong old Password!');
+    }
+
+    const newHashedPassword = await bcrypt.hash(payload?.newPassword, Number(config.bcrypt_salt));
+
+    await UserModel.findOneAndUpdate(
+        { id: user.id },
+        {
+            password: newHashedPassword,
+            needChangePassword: false,
+        }
+    )
+    return 'Done👍';
+}
+
 export const AuthService = {
     LoginUser,
-    RefreshAccessToken
+    RefreshAccessToken,
+    ChangeUserPassword
 };

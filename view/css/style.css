@@ -5,7 +5,7 @@
 
 .main {
   width: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5)50%, rgba(0, 0, 0, 0.5)50%), url(../img/1.jpg);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../img/1.jpg);
   /* background-image: url(../img/1.jpg); */
   background-position: center;
   background-size: cover;
@@ -274,4 +274,21 @@ ul li a:hover {
 
 .icons ion-icon:hover {
   color: #ff7200;
+}
+
+.github-icon {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 3rem;
+  font-size: 4rem;
+  color: aqua;
+  transition: all .5s;
+
+  &:hover {
+    text-shadow: 0px 0px 15px #ffd000;
+  }
+}
+
+.text-content {
+  width: 50%;
 }
