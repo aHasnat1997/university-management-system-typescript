@@ -28,7 +28,19 @@ const NewAccessToken = handleAsyncReq(async (req: Request, res: Response): Promi
     });
 });
 
+/**
+ * User password change
+ */
+const ChangePassword = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
+    const result = await AuthService.ChangeUserPassword(req?.user, req?.body);
+    handlesResponse(res, {
+        massage: 'Password change successful!',
+        doc: result
+    });
+});
+
 export const AuthController = {
     UserLogin,
-    NewAccessToken
+    NewAccessToken,
+    ChangePassword
 };
