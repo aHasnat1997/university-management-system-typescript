@@ -111,9 +111,38 @@ const ForgotUserPassword = async (email: string) => {
     return `http://localhost:4000?email=${user.email}&token=${forgotToken}`;
 }
 
+/**
+ * Change user password when forgot service
+ * @param token token from headers
+ * @param password new password
+ */
+const ChangeUserPasswordForgot = async (token: string, password: string) => {
+    const decoded = jwt.verify(token, config.jwt_forgot_secret as string) as JwtPayload;
+    const user = await UserModel.findOne({ id: decoded.userId });
+    if (!user) {
+        throw new AppError(HTTPStatusCode.NotFound, 'This user is not found!');
+    } else if (user?.isDeleted) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is already deleted!');
+    } else if (user?.status === 'blocked') {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is blocked!');
+    }
+
+    const newHashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt));
+
+    await UserModel.findOneAndUpdate(
+        { id: user.id },
+        {
+            password: newHashedPassword,
+            needChangePassword: false,
+        }
+    )
+    return 'Done👍';
+}
+
 export const AuthService = {
     LoginUser,
     RefreshAccessToken,
     ChangeUserPassword,
-    ForgotUserPassword
+    ForgotUserPassword,
+    ChangeUserPasswordForgot
 };
