@@ -94,7 +94,12 @@ const ForgotUserPassword = async (email: string) => {
     const user = await UserModel.findOne({ email });
     if (!user) {
         throw new AppError(HTTPStatusCode.NotFound, 'Wrong email, no user found!')
+    } else if (user?.isDeleted) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is already deleted!');
+    } else if (user?.status === 'blocked') {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is blocked!');
     }
+
     const jwtPayload = {
         userId: user.id,
         role: user.role

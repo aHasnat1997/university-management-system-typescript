@@ -45,7 +45,7 @@ const ChangePassword = handleAsyncReq(async (req: Request, res: Response): Promi
 const ForgotPassword = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
     const result = await AuthService.ForgotUserPassword(req.body.email);
     handlesResponse(res, {
-        massage: 'Check your mail for next process!',
+        massage: 'You have only 5 minutes for check your mail for next process!',
         doc: result
     });
 });
