@@ -91,9 +91,19 @@ const ChangeUserPassword = async (user: JwtPayload, payload: TChangePassword) =>
  * @param email user email
  */
 const ForgotUserPassword = async (email: string) => {
-    console.log(email);
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+        throw new AppError(HTTPStatusCode.NotFound, 'Wrong email, no user found!')
+    }
+    const jwtPayload = {
+        userId: user.id,
+        role: user.role
+    }
+    const forgotToken = jwt.sign(jwtPayload, config.jwt_forgot_secret as string, { expiresIn: config.jwt_forgot_expires_in });
+    console.log(user);
 
-    return 'http://localhost:4000/token...';
+
+    return `http://localhost:4000?email=${user.email}&token=${forgotToken}`;
 }
 
 export const AuthService = {

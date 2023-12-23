@@ -3,6 +3,7 @@ import { Model } from "mongoose";
 // user type
 export type TUser = {
     id: string,
+    email: string,
     role: 'student' | 'teacher' | 'admin',
     password: string,
     needChangePassword: boolean,
