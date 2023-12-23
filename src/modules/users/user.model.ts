@@ -10,6 +10,11 @@ const UserSchema = new Schema<TUser, TUserModel>({
         required: [true, 'id is required'],
         unique: true
     },
+    email: {
+        type: String,
+        required: [true, 'email is required'],
+        unique: true
+    },
     role: {
         type: String,
         enum: {

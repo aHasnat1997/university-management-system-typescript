@@ -86,8 +86,63 @@ const ChangeUserPassword = async (user: JwtPayload, payload: TChangePassword) =>
     return 'Done👍';
 }
 
+/**
+ * Forgot user password service
+ * @param email user email
+ */
+const ForgotUserPassword = async (email: string) => {
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+        throw new AppError(HTTPStatusCode.NotFound, 'Wrong email, no user found!')
+    } else if (user?.isDeleted) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is already deleted!');
+    } else if (user?.status === 'blocked') {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is blocked!');
+    }
+
+    const jwtPayload = {
+        userId: user.id,
+        role: user.role
+    }
+    const forgotToken = jwt.sign(jwtPayload, config.jwt_forgot_secret as string, { expiresIn: config.jwt_forgot_expires_in });
+    console.log(user);
+
+
+    return `http://localhost:4000?email=${user.email}&token=${forgotToken}`;
+}
+
+/**
+ * Change user password when forgot service
+ * @param token token from headers
+ * @param password new password
+ */
+const ChangeUserPasswordForgot = async (token: string, password: string) => {
+    const decoded = jwt.verify(token, config.jwt_forgot_secret as string) as JwtPayload;
+    const user = await UserModel.findOne({ id: decoded.userId });
+    if (!user) {
+        throw new AppError(HTTPStatusCode.NotFound, 'This user is not found!');
+    } else if (user?.isDeleted) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is already deleted!');
+    } else if (user?.status === 'blocked') {
+        throw new AppError(HTTPStatusCode.Forbidden, 'User is blocked!');
+    }
+
+    const newHashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt));
+
+    await UserModel.findOneAndUpdate(
+        { id: user.id },
+        {
+            password: newHashedPassword,
+            needChangePassword: false,
+        }
+    )
+    return 'Done👍';
+}
+
 export const AuthService = {
     LoginUser,
     RefreshAccessToken,
-    ChangeUserPassword
+    ChangeUserPassword,
+    ForgotUserPassword,
+    ChangeUserPasswordForgot
 };

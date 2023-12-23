@@ -39,8 +39,32 @@ const ChangePassword = handleAsyncReq(async (req: Request, res: Response): Promi
     });
 });
 
+/**
+ * User password forgot
+ */
+const ForgotPassword = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
+    const result = await AuthService.ForgotUserPassword(req.body.email);
+    handlesResponse(res, {
+        massage: 'You have only 5 minutes for check your mail for next process!',
+        doc: result
+    });
+});
+
+/**
+ * User password change
+ */
+const ChangeForgotPassword = handleAsyncReq(async (req: Request, res: Response): Promise<void> => {
+    const result = await AuthService.ChangeUserPasswordForgot(req?.headers?.authorization as string, req?.body?.password);
+    handlesResponse(res, {
+        massage: 'Password change successful!',
+        doc: result
+    });
+});
+
 export const AuthController = {
     UserLogin,
     NewAccessToken,
-    ChangePassword
+    ChangePassword,
+    ForgotPassword,
+    ChangeForgotPassword
 };

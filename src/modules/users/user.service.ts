@@ -19,6 +19,7 @@ import { TeacherModel } from "../teachers/teacher.model";
  */
 const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | undefined> => {
     const userData: Partial<TUser> = {
+        email: payload.email,
         role: 'student',
         password: config.user_default_password,
         needChangePassword: true,
@@ -71,6 +72,7 @@ const createUserAsStudentIntoDB = async (payload: TStudent): Promise<TStudent | 
  */
 const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefined> => {
     const userData: Partial<TUser> = {
+        email: payload.email,
         role: 'admin',
         password: config.user_default_password,
         needChangePassword: true,
@@ -118,6 +120,7 @@ const createUserAsAdminIntoDB = async (payload: TAdmin): Promise<TAdmin | undefi
  */
 const createUserAsTeacherIntoDB = async (payload: TTeacher): Promise<TTeacher | undefined> => {
     const userData: Partial<TUser> = {
+        email: payload.email,
         role: 'teacher',
         password: config.user_default_password,
         needChangePassword: true,
