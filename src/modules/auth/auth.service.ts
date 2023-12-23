@@ -86,8 +86,19 @@ const ChangeUserPassword = async (user: JwtPayload, payload: TChangePassword) =>
     return 'Done👍';
 }
 
+/**
+ * Forgot user password service
+ * @param email user email
+ */
+const ForgotUserPassword = async (email: string) => {
+    console.log(email);
+
+    return 'http://localhost:4000/token...';
+}
+
 export const AuthService = {
     LoginUser,
     RefreshAccessToken,
-    ChangeUserPassword
+    ChangeUserPassword,
+    ForgotUserPassword
 };
