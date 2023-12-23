@@ -5,6 +5,7 @@ import { UserModel } from '../users/user.model';
 import { TAuth, TChangePassword } from './auth.interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
+import { sendMali } from '../../utils/sendMail';
 
 /**
  * user login service
@@ -107,8 +108,13 @@ const ForgotUserPassword = async (email: string) => {
     const forgotToken = jwt.sign(jwtPayload, config.jwt_forgot_secret as string, { expiresIn: config.jwt_forgot_expires_in });
     console.log(user);
 
+    const isMailSend = await sendMali(user.email, `${config.host}?email=${user.email}&token=${forgotToken}`);
+    if (!isMailSend) {
+        throw new AppError(HTTPStatusCode.Forbidden, 'not send👎');
+    }
+    // console.log('mail res:======', isMailSend);
 
-    return `http://localhost:4000?email=${user.email}&token=${forgotToken}`;
+    return `Done👍`;
 }
 
 /**
