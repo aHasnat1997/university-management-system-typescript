@@ -4,6 +4,7 @@ dotenv.config();
 
 export default {
     port: process.env.PORT,
+    host: process.env.HOST,
     databaseURL: process.env.DEV_DB_URL,
     bcrypt_salt: process.env.BCRYPT_SALT,
     user_default_password: process.env.USER_DEFAULT_PASSWORD,
@@ -13,4 +14,6 @@ export default {
     jwt_forgot_secret: process.env.JWT_FORGOT_SECRET,
     jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
     jwt_forgot_expires_in: process.env.JWT_FORGOT_EXPIRES_IN,
+    email: process.env.EMAIL,
+    pass: process.env.PASS
 };
